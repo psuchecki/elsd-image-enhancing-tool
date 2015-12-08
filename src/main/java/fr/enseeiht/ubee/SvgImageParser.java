@@ -1,5 +1,6 @@
 package fr.enseeiht.ubee;
 
+import com.google.common.collect.Lists;
 import com.google.common.io.Resources;
 import org.apache.batik.dom.svg.SAXSVGDocumentFactory;
 import org.apache.batik.dom.svg.SVGOMLineElement;
@@ -9,6 +10,7 @@ import org.w3c.dom.svg.SVGDocument;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 
 public class SvgImageParser {
 
@@ -17,12 +19,19 @@ public class SvgImageParser {
         SAXSVGDocumentFactory f = new SAXSVGDocumentFactory(parser);
         URL url = Resources.getResource("mire5.svg");
         SVGDocument doc = f.createSVGDocument(url.toString());
-        NodeList lines = doc.getDocumentElement().getElementsByTagName("line");
-        int linesCount = lines.getLength();
+        NodeList svgLines = doc.getDocumentElement().getElementsByTagName("line");
+        int linesCount = svgLines.getLength();
+        List<Line> lines = Lists.newArrayList();
 
         for (int lineIndex = 0; lineIndex < linesCount; lineIndex++) {
-            SVGOMLineElement line = (SVGOMLineElement) lines.item(lineIndex);
-            System.out.println(line.getX1().getBaseVal().getValue());
+            SVGOMLineElement svgLine = (SVGOMLineElement) svgLines.item(lineIndex);
+            Line line = new Line(svgLine.getX1().getBaseVal().getValue(), svgLine.getX2().getBaseVal().getValue(),
+                    svgLine.getY1().getBaseVal().getValue(), svgLine.getY2().getBaseVal().getValue());
+            lines.add(line);
         }
+
+        new LineIntersectionFinder().findCrossingsBetweenLines(svgLines);
+
+
     }
 }
