@@ -6,13 +6,11 @@ import org.w3c.dom.NodeList;
 
 import java.util.List;
 
-public class LineIntersectionFinder {
-    public void findCrossingsBetweenLines(NodeList svgLines) {
+public class LinePairFinder {
+    public List<LinePair> findLinesIntersections(NodeList svgLines) {
         List<Line> lines = convertToLines(svgLines);
-        List<LinePair> linePairs = makeLinePairs(lines);
-        for (LinePair linePair : linePairs) {
-            linePair.linesIntersect();
-        }
+
+        return makeLinePairs(lines);
     }
 
     private List<LinePair> makeLinePairs(List<Line> lines) {
@@ -33,9 +31,10 @@ public class LineIntersectionFinder {
         for (int lineIndex = 0; lineIndex < linesCount; lineIndex++) {
             SVGOMLineElement svgLine = (SVGOMLineElement) svgLines.item(lineIndex);
             Line line = new Line(svgLine.getX1().getBaseVal().getValue(), svgLine.getX2().getBaseVal().getValue(),
-                    svgLine.getY1().getBaseVal().getValue(), svgLine.getY2().getBaseVal().getValue());
+                    svgLine.getY1().getBaseVal().getValue(), svgLine.getY2().getBaseVal().getValue(), lineIndex);
             lines.add(line);
         }
+
         return lines;
     }
 }

@@ -1,25 +1,13 @@
 package fr.enseeiht.ubee;
 
-public class IntersectionPoint {
-    private float x;
-    private float y;
+public class IntersectionPoint extends Point {
+
     private boolean onFirstLine;
     private boolean onSecondLine;
+    private boolean isEmpty;
 
-    public float getX() {
-        return x;
-    }
-
-    public void setX(float x) {
-        this.x = x;
-    }
-
-    public float getY() {
-        return y;
-    }
-
-    public void setY(float y) {
-        this.y = y;
+    public IntersectionPoint() {
+        super(0, 0);
     }
 
     public boolean isOnFirstLine() {
@@ -36,5 +24,17 @@ public class IntersectionPoint {
 
     public void setOnSecondLine(boolean onSecondLine) {
         this.onSecondLine = onSecondLine;
+    }
+
+    public boolean isEmpty() {
+        return isEmpty;
+    }
+
+    public void setEmpty(boolean empty) {
+        isEmpty = empty;
+    }
+
+    public boolean isNotEmpty() {
+        return !isEmpty;
     }
 }

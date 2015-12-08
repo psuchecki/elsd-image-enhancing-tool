@@ -26,12 +26,12 @@ public class SvgImageParser {
         for (int lineIndex = 0; lineIndex < linesCount; lineIndex++) {
             SVGOMLineElement svgLine = (SVGOMLineElement) svgLines.item(lineIndex);
             Line line = new Line(svgLine.getX1().getBaseVal().getValue(), svgLine.getX2().getBaseVal().getValue(),
-                    svgLine.getY1().getBaseVal().getValue(), svgLine.getY2().getBaseVal().getValue());
+                    svgLine.getY1().getBaseVal().getValue(), svgLine.getY2().getBaseVal().getValue(), lineIndex);
             lines.add(line);
         }
 
-        new LineIntersectionFinder().findCrossingsBetweenLines(svgLines);
-
-
+        List<LinePair> linePairs = new LinePairFinder().findLinesIntersections(svgLines);
+        new LineConnectionDrawer().drawConnectionsForPairs(linePairs, svgLines);
+        new SvgFileExporter().exportToSvg(doc);
     }
 }

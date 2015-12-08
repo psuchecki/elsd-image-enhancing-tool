@@ -1,39 +1,49 @@
 package fr.enseeiht.ubee;
 
 public class Line {
-    private float x1;
-    private float x2;
-    private float y1;
-    private float y2;
+    private Point startPoint;
+    private Point endPoint;
+    private int lineIndex;
 
-    public Line(float x1, float x2, float y1, float y2) {
-        this.x1 = x1;
-        this.x2 = x2;
-        this.y1 = y1;
-        this.y2 = y2;
+    public Line(float x1, float x2, float y1, float y2, int lineIndex) {
+        startPoint = new Point(x1, y1);
+        endPoint = new Point(x2, y2);
+        this.lineIndex = lineIndex;
+    }
+
+    public LineDistanceInfo getLineDistanceInfo(IntersectionPoint intersectionPoint) {
+        double startPointDistance = intersectionPoint.getDistanceToPoint(startPoint);
+        double endPointDistance = intersectionPoint.getDistanceToPoint(endPoint);
+
+        return new LineDistanceInfo(startPointDistance, endPointDistance, intersectionPoint);
     }
 
     public float getXDistance() {
-        return x2 - x1;
+        return endPoint.getX() - startPoint.getX();
     }
 
     public float getYDistance() {
-        return y2 - y1;
+        return endPoint.getY() - startPoint.getY();
     }
 
     public float getX1() {
-        return x1;
-    }
-
-    public float getX2() {
-        return x2;
+        return startPoint.getX();
     }
 
     public float getY1() {
-        return y1;
+        return startPoint.getY();
     }
 
-    public float getY2() {
-        return y2;
+    public int getLineIndex() {
+        return lineIndex;
     }
+
+    public Point getStartPoint() {
+        return startPoint;
+    }
+
+    public Point getEndPoint() {
+        return endPoint;
+    }
+
 }
