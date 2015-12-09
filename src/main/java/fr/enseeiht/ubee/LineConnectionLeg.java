@@ -88,4 +88,15 @@ public class LineConnectionLeg {
     public int getLineId() {
         return lineId;
     }
+
+    public boolean shouldDrawLineEnd(LineConnectionHolder.LineEnd lineEnd) {
+        boolean shouldDrawLineEnd;
+        if (LineConnectionHolder.LineEnd.START.equals(lineEnd)) {
+            shouldDrawLineEnd = hasStartIntersectionPoint() && drawFromStartToIntersection;
+        } else {
+            shouldDrawLineEnd = hasEndIntersectionPoint() && drawFromEndToIntersection;
+        }
+
+        return shouldDrawLineEnd;
+    }
 }

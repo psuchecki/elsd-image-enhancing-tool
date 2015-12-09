@@ -17,7 +17,7 @@ public class SvgImageParser {
     public static void main(String[] args) throws IOException {
         String parser = XMLResourceDescriptor.getXMLParserClassName();
         SAXSVGDocumentFactory f = new SAXSVGDocumentFactory(parser);
-        URL url = Resources.getResource("mire7.svg");
+        URL url = Resources.getResource("mire8.svg");
         SVGDocument doc = f.createSVGDocument(url.toString());
         NodeList svgLines = doc.getDocumentElement().getElementsByTagName("line");
         int linesCount = svgLines.getLength();

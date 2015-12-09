@@ -50,14 +50,13 @@ public class LineConnectionDrawer {
         LineConnectionLeg minStartLineConnectionLeg = lineConnectionHolder.findMinStartLineConnectionLeg(lineIndex);
         LineConnectionLeg minEndLineConnectionLeg = lineConnectionHolder.findMinEndLineConnectionLeg(lineIndex);
 
-        double startPointDistance = minStartLineConnectionLeg.getStartPointDistance();
-        if (lineConnectionLeg.hasStartIntersectionPoint() &&
-                startPointDistance >= lineConnectionLeg.getStartPointDistance()) {
-            minStartLineConnectionLeg.setStartPointDistance(startPointDistance);
+        if (minStartLineConnectionLeg != null && lineConnectionLeg.hasStartIntersectionPoint() &&
+                minStartLineConnectionLeg.getStartPointDistance() >= lineConnectionLeg.getStartPointDistance()) {
+            minStartLineConnectionLeg.setStartPointDistance(minStartLineConnectionLeg.getStartPointDistance());
             minStartLineConnectionLeg.setStartIntersectionPoint(intersectionPoint);
             minStartLineConnectionLeg.setDrawFromStartToIntersection(drawToIntersection);
             lineConnectionHolder.updatStartConnectionsForLine(lineIndex);
-        } else if (lineConnectionLeg.hasEndIntersectionPoint() &&
+        } else if (minEndLineConnectionLeg != null && lineConnectionLeg.hasEndIntersectionPoint() &&
                 minEndLineConnectionLeg.getEndPointDistance() >= lineConnectionLeg.getEndPointDistance()) {
             minEndLineConnectionLeg.setEndPointDistance(lineConnectionLeg.getEndPointDistance());
             minEndLineConnectionLeg.setEndIntersectionPoint(intersectionPoint);

@@ -8,7 +8,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+//TODO: refactor this class to use LineEnd properly
 public class LineConnectionHolder {
+    public enum LineEnd {START, END}
 
     private List<LineConnection> lineConnections = Lists.newArrayList();
 
@@ -17,41 +19,45 @@ public class LineConnectionHolder {
     }
 
     public LineConnectionLeg findMinStartLineConnectionLeg(int lineIndex) {
-        return findMinConnectionLeg(lineIndex, new StartDistanceComparator(lineIndex));
+        return findMinConnectionLeg(lineIndex, LineEnd.START);
     }
 
     public LineConnectionLeg findMinEndLineConnectionLeg(int lineIndex) {
-        return findMinConnectionLeg(lineIndex, new EndDistanceComparator(lineIndex));
+        return findMinConnectionLeg(lineIndex, LineEnd.END);
     }
 
-    private LineConnectionLeg findMinConnectionLeg(int lineIndex, Comparator<LineConnection> startDistanceComparator) {
-        if (Iterables.isEmpty(lineConnections)) {
+    private LineConnectionLeg findMinConnectionLeg(int lineIndex, LineEnd lineEnd) {
+        List<LineConnection> lineConnectionsById = getSortedLineConnectionsById(lineIndex, lineEnd);
+        if (Iterables.isEmpty(lineConnectionsById)) {
             return null;
         }
-
-        List<LineConnection> lineConnectionsById = getSortedLineConnectionsById(lineIndex, startDistanceComparator);
         LineConnection minLineConnection = lineConnectionsById.get(0);
 
         return minLineConnection.getConnectionLegByLineId(lineIndex);
     }
 
-    private List<LineConnection> getSortedLineConnectionsById(int lineIndex,
-                                                              Comparator<LineConnection> startDistanceComparator) {
-        List<LineConnection> lineConnectionsById = getLineConnectionsByLineId(lineIndex);
+    private List<LineConnection> getSortedLineConnectionsById(int lineIndex, LineEnd lineEnd) {
 
-        Collections.sort(lineConnectionsById, startDistanceComparator);
+        List<LineConnection> lineConnectionsById = getLineConnectionsByLineIdAndLineType(lineIndex, lineEnd);
+
+        Comparator<LineConnection> lineConnectionComparator =
+                LineEnd.START.equals(lineEnd) ? new StartDistanceComparator(lineIndex) :
+                        new EndDistanceComparator(lineIndex);
+        Collections.sort(lineConnectionsById, lineConnectionComparator);
         return lineConnectionsById;
     }
 
-    private List<LineConnection> getLineConnectionsByLineId(int lineIndex) {
-        return this.lineConnections.stream()
-                .filter(connection -> connection.getConnectionLeg1().getLineId() == lineIndex ||
-                        connection.getConnectionLeg2().getLineId() == lineIndex).collect(Collectors.toList());
+    private List<LineConnection> getLineConnectionsByLineIdAndLineType(int lineIndex, LineEnd lineEnd) {
+        return this.lineConnections.stream().filter(connection -> {
+            LineConnectionLeg connectionLeg1 = connection.getConnectionLeg1();
+            LineConnectionLeg connectionLeg2 = connection.getConnectionLeg2();
+            return (connectionLeg1.getLineId() == lineIndex && connectionLeg1.shouldDrawLineEnd(lineEnd)) ||
+                    (connectionLeg2.getLineId() == lineIndex && connectionLeg2.shouldDrawLineEnd(lineEnd));
+        }).collect(Collectors.toList());
     }
 
     public void updatStartConnectionsForLine(int lineIndex) {
-        List<LineConnection> lineConnectionsById =
-                getSortedLineConnectionsById(lineIndex, new StartDistanceComparator(lineIndex));
+        List<LineConnection> lineConnectionsById = getSortedLineConnectionsById(lineIndex, LineEnd.START);
 
         for (int i = 1; i < lineConnectionsById.size(); i++) {
             LineConnection lineConnection = lineConnectionsById.get(i);
@@ -60,8 +66,7 @@ public class LineConnectionHolder {
     }
 
     public void updateEndConnectionsForLine(int lineIndex) {
-        List<LineConnection> lineConnectionsById =
-                getSortedLineConnectionsById(lineIndex, new EndDistanceComparator(lineIndex));
+        List<LineConnection> lineConnectionsById = getSortedLineConnectionsById(lineIndex, LineEnd.END);
 
         for (int i = 1; i < lineConnectionsById.size(); i++) {
             LineConnection lineConnection = lineConnectionsById.get(i);
