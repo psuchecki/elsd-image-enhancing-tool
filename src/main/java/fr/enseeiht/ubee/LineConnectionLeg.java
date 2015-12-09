@@ -1,17 +1,17 @@
 package fr.enseeiht.ubee;
 
-public class LineDistanceInfo {
+public class LineConnectionLeg {
     private double startPointDistance;
     private double endPointDistance;
     private IntersectionPoint startIntersectionPoint;
     private IntersectionPoint endIntersectionPoint;
+    private boolean drawFromStartToIntersection = true;
+    private boolean drawFromEndToIntersection = true;
+    private int lineId;
 
-    public LineDistanceInfo(double startPointDistance, double endPointDistance) {
-        this.startPointDistance = startPointDistance;
-        this.endPointDistance = endPointDistance;
-    }
-
-    public LineDistanceInfo(double startPointDistance, double endPointDistance, IntersectionPoint intersectionPoint) {
+    public LineConnectionLeg(int lineId, double startPointDistance, double endPointDistance,
+                             IntersectionPoint intersectionPoint) {
+        this.lineId = lineId;
         this.startPointDistance = startPointDistance;
         this.endPointDistance = endPointDistance;
         if (isStartPointDistanceShorter()) {
@@ -35,20 +35,6 @@ public class LineDistanceInfo {
 
     public boolean hasEndIntersectionPoint() {
         return endIntersectionPoint != null;
-    }
-
-    public LineDistanceInfo toShorterOnlyDistanceInfo() {
-        LineDistanceInfo shorterOnlyDistanceInfo;
-
-        if (isStartPointDistanceShorter()) {
-            shorterOnlyDistanceInfo = new LineDistanceInfo(startPointDistance, 0);
-            shorterOnlyDistanceInfo.setStartIntersectionPoint(startIntersectionPoint);
-        } else {
-            shorterOnlyDistanceInfo = new LineDistanceInfo(0, endPointDistance);
-            shorterOnlyDistanceInfo.setEndIntersectionPoint(endIntersectionPoint);
-        }
-
-        return shorterOnlyDistanceInfo;
     }
 
     public double getStartPointDistance() {
@@ -81,5 +67,25 @@ public class LineDistanceInfo {
 
     public IntersectionPoint getEndIntersectionPoint() {
         return endIntersectionPoint;
+    }
+
+    public boolean drawLineToStartIntersection() {
+        return hasStartIntersectionPoint() && drawFromStartToIntersection;
+    }
+
+    public boolean drawLineToEndIntersection() {
+        return hasEndIntersectionPoint() && drawFromEndToIntersection;
+    }
+
+    public void setDrawFromStartToIntersection(boolean drawFromStartToIntersection) {
+        this.drawFromStartToIntersection = drawFromStartToIntersection;
+    }
+
+    public void setDrawFromEndToIntersection(boolean drawFromEndToIntersection) {
+        this.drawFromEndToIntersection = drawFromEndToIntersection;
+    }
+
+    public int getLineId() {
+        return lineId;
     }
 }

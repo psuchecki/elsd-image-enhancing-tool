@@ -4,7 +4,7 @@ public class IntersectionPoint extends Point {
 
     private boolean onFirstLine;
     private boolean onSecondLine;
-    private boolean isEmpty;
+    private boolean drawLine = true;
 
     public IntersectionPoint() {
         super(0, 0);
@@ -26,15 +26,11 @@ public class IntersectionPoint extends Point {
         this.onSecondLine = onSecondLine;
     }
 
-    public boolean isEmpty() {
-        return isEmpty;
+    public boolean shouldDrawLine() {
+        return drawLine;
     }
 
-    public void setEmpty(boolean empty) {
-        isEmpty = empty;
-    }
-
-    public boolean isNotEmpty() {
-        return !isEmpty;
+    public void setDrawLine(boolean drawLine) {
+        this.drawLine = drawLine;
     }
 }

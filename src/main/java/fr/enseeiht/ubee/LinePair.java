@@ -14,11 +14,11 @@ public class LinePair {
 
     public boolean shouldConnectLines() {
         boolean connectLines = false;
-        if (intersectionPoint.isNotEmpty()) {
-            LineDistanceInfo line1DistanceInfo = getLine1DistanceInfo();
-            LineDistanceInfo line2DistanceInfo = getLine2DistanceInfo();
+        if (intersectionPoint.shouldDrawLine()) {
+            LineConnectionLeg lineConnectionLeg1 = getLineConnectionLeg1();
+            LineConnectionLeg lineConnectionLeg2 = getLineConnectionLeg2();
 
-            double totalDistance = line1DistanceInfo.getShorterDistance() + line2DistanceInfo.getShorterDistance();
+            double totalDistance = lineConnectionLeg1.getShorterDistance() + lineConnectionLeg2.getShorterDistance();
             connectLines = totalDistance < DISTANCE_THRESHOLD;
         }
 
@@ -33,7 +33,7 @@ public class LinePair {
         denominator =
                 ((line2.getYDistance()) * (line1.getXDistance())) - ((line2.getXDistance()) * (line1.getYDistance()));
         if (denominator == 0) { // lines are parallel
-            intersectionPoint.setEmpty(true);
+            intersectionPoint.setDrawLine(false);
             return intersectionPoint;
         }
 
@@ -70,11 +70,15 @@ public class LinePair {
         return line2.getLineIndex();
     }
 
-    public LineDistanceInfo getLine1DistanceInfo() {
-        return line1.getLineDistanceInfo(intersectionPoint);
+    public LineConnection getLineConnection() {
+        return new LineConnection(getLineConnectionLeg1(), getLineConnectionLeg2());
     }
 
-    public LineDistanceInfo getLine2DistanceInfo() {
-        return line2.getLineDistanceInfo(intersectionPoint);
+    private LineConnectionLeg getLineConnectionLeg1() {
+        return line1.getLineConnectionLeg(intersectionPoint);
+    }
+
+    private LineConnectionLeg getLineConnectionLeg2() {
+        return line2.getLineConnectionLeg(intersectionPoint);
     }
 }

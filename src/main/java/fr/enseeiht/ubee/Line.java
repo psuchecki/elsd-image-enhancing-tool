@@ -11,11 +11,11 @@ public class Line {
         this.lineIndex = lineIndex;
     }
 
-    public LineDistanceInfo getLineDistanceInfo(IntersectionPoint intersectionPoint) {
+    public LineConnectionLeg getLineConnectionLeg(IntersectionPoint intersectionPoint) {
         double startPointDistance = intersectionPoint.getDistanceToPoint(startPoint);
         double endPointDistance = intersectionPoint.getDistanceToPoint(endPoint);
 
-        return new LineDistanceInfo(startPointDistance, endPointDistance, intersectionPoint);
+        return new LineConnectionLeg(lineIndex, startPointDistance, endPointDistance, intersectionPoint);
     }
 
     public float getXDistance() {
@@ -36,14 +36,6 @@ public class Line {
 
     public int getLineIndex() {
         return lineIndex;
-    }
-
-    public Point getStartPoint() {
-        return startPoint;
-    }
-
-    public Point getEndPoint() {
-        return endPoint;
     }
 
 }
